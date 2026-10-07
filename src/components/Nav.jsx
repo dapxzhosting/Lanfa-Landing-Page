@@ -17,6 +17,24 @@ export default function Nav() {
   const lastY = useRef(0);
   const { scrollY } = useScroll();
 
+  function handleHashClick(event, href) {
+    if (!href || !href.startsWith("#")) return;
+
+    event.preventDefault();
+    setOpen(false);
+
+    const target = document.querySelector(href);
+    if (target) {
+      const yOffset = 90;
+      const top = target.getBoundingClientRect().top + window.scrollY - yOffset;
+      window.scrollTo({ top, behavior: "smooth" });
+      history.replaceState(null, "", href);
+      return;
+    }
+
+    window.location.hash = href;
+  }
+
   useMotionValueEvent(scrollY, "change", (y) => {
     const goingDown = y > lastY.current;
     setHidden(goingDown && y > 120 && !open);
@@ -55,7 +73,7 @@ export default function Nav() {
 
         <nav className="nav-links">
           {LINKS.map((item, i) => (
-            <NavLink key={item.href} {...item} delay={0.25 + i * 0.07} />
+            <NavLink key={item.href} {...item} delay={0.25 + i * 0.07} onClick={handleHashClick} />
           ))}
         </nav>
 
@@ -118,7 +136,9 @@ export default function Nav() {
                   key={item.href}
                   href={item.href}
                   style={styles.mobileLink}
-                  onClick={() => setOpen(false)}
+                  onClick={(event) => {
+                    handleHashClick(event, item.href);
+                  }}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: 0.05 + i * 0.05 }}
@@ -146,11 +166,12 @@ export default function Nav() {
   );
 }
 
-function NavLink({ href, label, delay }) {
+function NavLink({ href, label, delay, onClick }) {
   return (
     <motion.a
       href={href}
       style={styles.link}
+      onClick={(event) => onClick(event, href)}
       initial={{ opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay, ease: "easeOut" }}
