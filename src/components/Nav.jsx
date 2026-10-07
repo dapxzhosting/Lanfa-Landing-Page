@@ -21,18 +21,25 @@ export default function Nav() {
     if (!href || !href.startsWith("#")) return;
 
     event.preventDefault();
+
+    // Lepas kunci scroll SEKARANG, sebelum scrollTo. Kalau menunggu useEffect,
+    // body masih overflow:hidden saat scrollTo dipanggil, jadi halaman tidak bergeser.
+    document.body.style.overflow = "";
     setOpen(false);
 
     const target = document.querySelector(href);
-    if (target) {
-      const yOffset = 90;
-      const top = target.getBoundingClientRect().top + window.scrollY - yOffset;
-      window.scrollTo({ top, behavior: "smooth" });
+    if (!target) {
       history.replaceState(null, "", href);
       return;
     }
 
-    window.location.hash = href;
+    // Tunggu satu frame supaya layout stabil setelah kunci scroll dilepas
+    requestAnimationFrame(() => {
+      const yOffset = 90;
+      const top = target.getBoundingClientRect().top + window.scrollY - yOffset;
+      window.scrollTo({ top, behavior: "smooth" });
+      history.replaceState(null, "", href);
+    });
   }
 
   useMotionValueEvent(scrollY, "change", (y) => {
