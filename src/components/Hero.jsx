@@ -4,7 +4,7 @@ import Logo from "./Logo.jsx";
 import screenshot from "../assets/lanfa-screenshot.png";
 import { gsap, prefersReducedMotion } from "../lib/gsap.js";
 
-const APP_URL = "https://lanfa.vercel.app";
+const APP_URL = "https://lanfa-website.daparawr.my.id";
 
 const HEADLINE = "Satu obrolan, tiga otak, dan bahasa yang kamu pilih sendiri.";
 

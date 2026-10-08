@@ -9,7 +9,7 @@ const LINKS = [
   { href: "#unduh", label: "Unduh" },
 ];
 
-const APP_URL = "https://lanfa.vercel.app";
+const APP_URL = "https://lanfa-website.daparawr.my.id";
 
 export default function Nav() {
   const [hidden, setHidden] = useState(false);
